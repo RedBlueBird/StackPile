@@ -1,6 +1,6 @@
 # Stackpile
 
-This website is created with React and Google Firebase. \
+This website is created with React and Google Firebase, aided with Boostrap 4. \
 Project initiated for an English class's genius hour assignment.
 
 ## Reddit but Reddit
