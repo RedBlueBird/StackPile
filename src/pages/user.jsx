@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
-import {useDocumentDataOnce} from "react-firebase-hooks/firestore";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
+import {useDocumentDataOnce} from "react-firebase-hooks/firestore";
 import firebase from "../modules/firebase";
 
 import UserBio from "../components/user/user-bio";
@@ -19,15 +21,15 @@ export default function User(){
     // },[value]);
 
     return (
-        <div className="row justify-content-center">
-            <div className="col-sm-8 col-lg-4">
+        <Row className="justify-content-center">
+            <Col sm={8} lg={4}>
                 <UserBio />
                 <UserDetail />
                 <UserStat />
-            </div>
-            <div className="col-sm-12 col-lg-7">
+            </Col>
+            <Col sm={12} lg={7}>
                 <UserCalendar />
-            </div>
-        </div>
+            </Col>
+        </Row>
     )
 }

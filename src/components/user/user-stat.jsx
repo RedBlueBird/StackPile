@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
+import Card from "react-bootstrap/Card";
 
 import {Radar} from "react-chartjs-2";
 
@@ -32,13 +33,13 @@ export default function UserStat(){
     }
 
     return (
-        <div className="card shadow my-2">
-            <div className="card-header">
+        <Card className="shadow my-2">
+            <Card.Header>
                 <h6 className="m-0">Statistics</h6>
-            </div>
-            <div className="card-body">
+            </Card.Header>
+            <Card.Body>
                 <Radar data={data} options={options} />
-            </div>
-        </div>
+            </Card.Body>
+        </Card>
     );
 }

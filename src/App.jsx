@@ -1,7 +1,8 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom";
+import Container from "react-bootstrap/Container";
 
-import Navbar from "./components/navbar.jsx";
+import Navibar from "./components/navibar.jsx";
 import Home from "./pages/home.jsx";
 import User from "./pages/user.jsx";
 
@@ -10,8 +11,8 @@ import User from "./pages/user.jsx";
 export default function App(){
   return (
     <BrowserRouter>
-      <div className="container">
-        <Navbar />
+      <Container>
+        <Navibar />
         <Switch>
           <Route exact path="/">
             <Redirect to="/home" />
@@ -19,7 +20,7 @@ export default function App(){
           <Route exact path="/home" component={Home} />
           <Route exact path="/user/:userid" component={User} />
         </Switch>
-      </div>
+      </Container>
     </BrowserRouter>
   )
 };

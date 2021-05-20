@@ -1,24 +1,28 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import Col from "react-bootstrap/Col";
+import Navbar from "react-bootstrap/Navbar";
+import Badge from "react-bootstrap/Badge";
+
 import {GiRainbowStar} from "react-icons/gi";
 import {FaBell} from "react-icons/fa";
 import {MdAddCircle} from "react-icons/md";
 import {SiReddit} from "react-icons/si";
 
-import logo_placeholder from "../images/logo-placeholder.png";
 import pfp_placeholder from "../images/pfp-placeholder.png";
 
-export default function Navbar(){
+export default function Navibar(){
+    console.log(pfp_placeholder);
     return (
-        <nav className="navbar sticky-top navbar-light bg-light d-flex justify-content-center p-0">
+        <Navbar bg="light" sticky="top" className="d-flex justify-content-center p-0">
             <div className="d-flex justify-content-between align-items-center" style={{width:"95%"}}>
-                <div className="d-flex flex-row">
-                    <div>
-                        <Link to="/" className="navbar-brand">
+                <div className="d-flex flex-row align-items-center">
+                    <Navbar.Brand>
+                        <Link to="/">
                             <SiReddit size={"2em"} style={{color:"#FF5700"}}/>
                             {/* <img height="50" src={logo_placeholder} alt="logo placeholder"/> */}
                         </Link>
-                    </div>
+                    </Navbar.Brand>
                     <div className="rounded flex-grow-1 p-2 m-1" style={{backgroundColor:"white"}}>
                         <p className="block-quote m-0">{"Search placeholder"}</p>
                     </div>
@@ -30,13 +34,13 @@ export default function Navbar(){
                                 <img className="rounded-circle" height="50" src={pfp_placeholder} alt="logo placeholder"/>
                             </Link>
                         </div>
-                        <div className="col px-2">
-                            <p className="m-0 mb-1 badge badge-primary px-2 py-1">{"BlueBirdy"}</p>
-                            <div className="d-flex justify-content-between align-items-center badge badge-pill">
+                        <Col className="px-2">
+                            <Badge variant="primary" className="m-0 mb-1 px-2 py-1">{"BlueBirdy"}</Badge>
+                            <Badge pill className="d-flex justify-content-between align-items-center">
                                 <p className="m-0"><GiRainbowStar style={{color:"Gray"}}/></p>
                                 <p className="m-0">{10}</p>
-                            </div>
-                        </div>
+                            </Badge>
+                        </Col>
                     </div>
                     <div className="rounded-circle p-2 m-1" style={{backgroundColor:"white"}}>
                         <FaBell size={"1.8em"} style={{color:"dimGray"}}/>
@@ -46,6 +50,6 @@ export default function Navbar(){
                     </div>
                 </div>
             </div>
-        </nav>
+        </Navbar>
     )
 }

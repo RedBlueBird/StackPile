@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
-import {useDocumentDataOnce} from "react-firebase-hooks/firestore";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
+import {useDocumentDataOnce} from "react-firebase-hooks/firestore";
 import firebase from "../modules/firebase";
+
+import HomeTopic from "../components/home/home-topic";
 
 export default function User(){
     // const {userid} = useParams();
@@ -14,13 +18,16 @@ export default function User(){
     // },[value]);
 
     return (
-        <div className="row justify-content-center">
-            <div className="col-sm-12 col-lg-3">
-            </div>
-            <div className="col-sm-12 col-lg-6">
-            </div>
-            <div className="col-sm-12 col-lg-3">
-            </div>
-        </div>
+        <Row className="justify-content-center">
+            <Col sm={12} lg={3}>
+                <HomeTopic />
+            </Col>
+            <Col sm={12} lg={6}>
+
+            </Col>
+            <Col sm={12} lg={3}>
+
+            </Col>
+        </Row>
     )
 }
