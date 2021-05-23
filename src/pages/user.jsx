@@ -10,26 +10,59 @@ import UserBio from "../components/user/user-bio";
 import UserDetail from "../components/user/user-detail";
 import UserStat from "../components/user/user-stat";
 import UserCalendar from "../components/user/user-calendar";
+import UserPost from "../components/user/user-post";
 
 export default function User(){
-    // const {userid} = useParams();
-    // let userRef = firebase.firestore.collection("users").doc(userid);
-    // const [value, loading, error] = useDocumentDataOnce(userRef);
+    const {userid} = useParams();
+    let userRef = firebase.firestore.collection("users").doc(userid);
+    const [value, loading, error] = useDocumentDataOnce(userRef);
 
-    // useEffect(()=>{
-    //     console.log(value);
-    // },[value]);
+    const [dates, setDates] = useState([]);
+
+    useEffect(()=>{
+        if (value){
+            (async () => {
+                let collect = await Promise.all(value.post.map(ref => {
+                    let res = ref.get()
+                    .then((doc) => {
+                        if (doc.exists){
+                            return doc.data();
+                        }else{
+                            console.log("No doc exist!");
+                        }
+                    }).catch((error)=>{
+                        console.log("Some error happened!");
+                    });
+                    if (res){
+                        return res;
+                    }
+                }));
+                collect.sort((a,b)=>b-a);
+                setDates(collect);
+            })();
+        }
+    },[value]);
 
     return (
-        <Row className="justify-content-center">
-            <Col sm={8} lg={4}>
-                <UserBio />
-                <UserDetail />
-                <UserStat />
-            </Col>
-            <Col sm={12} lg={7}>
-                <UserCalendar />
-            </Col>
-        </Row>
-    )
+        <>
+        {(()=>{
+            if (value){
+                // console.log(value);
+                return (
+                    <Row className="justify-content-center">
+                        <Col sm={8} lg={4}>
+                            <UserBio info={value}/>
+                            <UserDetail info={value.detail}/>
+                            <UserStat />
+                        </Col>
+                        <Col sm={12} lg={7}>
+                            <UserCalendar info={dates}/>
+                            <UserPost info={dates} author={value}/>
+                        </Col>
+                    </Row>
+                );
+            }
+        })()}
+        </>
+    );
 }

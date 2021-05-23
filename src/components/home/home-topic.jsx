@@ -29,7 +29,7 @@ export default function HomeTopic(){
                                 <div key={uuid()}>
                                     <Accordion.Toggle as={ListGroup.Item} className="border-0 px-0 pb-0 pt-3" style={{cursor:"pointer"}} eventKey={field}>
                                         <div className="border-bottom px-3">
-                                            {field}
+                                            {field[0].toUpperCase() + field.substring(1)}
                                         </div>
                                     </Accordion.Toggle>
                                     <Accordion.Collapse eventKey={field}>

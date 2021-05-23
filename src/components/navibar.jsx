@@ -12,7 +12,6 @@ import {SiReddit} from "react-icons/si";
 import pfp_placeholder from "../images/pfp-placeholder.png";
 
 export default function Navibar(){
-    console.log(pfp_placeholder);
     return (
         <Navbar bg="light" sticky="top" className="d-flex justify-content-center p-0">
             <div className="d-flex justify-content-between align-items-center" style={{width:"95%"}}>
@@ -23,7 +22,7 @@ export default function Navibar(){
                             {/* <img height="50" src={logo_placeholder} alt="logo placeholder"/> */}
                         </Link>
                     </Navbar.Brand>
-                    <div className="rounded flex-grow-1 p-2 m-1" style={{backgroundColor:"white"}}>
+                    <div className="rounded flex-fill p-2 m-1" style={{backgroundColor:"white"}}>
                         <p className="block-quote m-0">{"Search placeholder"}</p>
                     </div>
                 </div>

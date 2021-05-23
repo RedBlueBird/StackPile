@@ -13,7 +13,7 @@ import {RiEditBoxLine} from "react-icons/ri";
 
 import pfp_placeholder from "../../images/pfp-placeholder.png";
 
-export default function UserBio(){
+export default function UserBio(p){
     return (
         <Card className="shadow my-2">
             <Card.Header>
@@ -29,34 +29,34 @@ export default function UserBio(){
                             style={{width: "100%", height: "auto"}}/>
                     </Col>
                     <Col xs={8}>
-                        <h4>{"BlueBirdy"}</h4>
+                        <h4>{p.info.username}</h4>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <GiRainbowStar style={{color:"Gray"}}/> Clout
                             </p>
-                            <Badge pill variant="info">{10}</Badge>
+                            <Badge pill variant="info">{p.info.clout}</Badge>
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <BsPersonLinesFill style={{color:"Gray"}}/> Following
                             </p>
-                            <Badge pill variant="info">{3}</Badge>
+                            <Badge pill variant="info">{p.info.following_count}</Badge>
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <BsPeopleFill style={{color:"Gray"}}/> Followers
                             </p>
-                            <Badge pill variant="info">{472}</Badge>
+                            <Badge pill variant="info">{p.info.follower_count}</Badge>
                         </div>
                     </Col>
                 </Row>
-                <div className="px-2 my-2">
+                {/* <div className="px-2 mt-1">
                     <FaGithub size={"1.8em"} style={{color:"DimGray"}}/>
                     <FaGoogle size={"1.8em"} style={{color:"DimGray"}}/>
-                </div>
-                <div>
-                    <p>
-                        {"This user left a blank bio!"}
+                </div> */}
+                <div className="my-3">
+                    <p className="m-0">
+                        {!p.info.about_self ? "This user left a blank bio!" : p.info.about_self}
                     </p>
                 </div>
                 <Button variant="primary" block>
