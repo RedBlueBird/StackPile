@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col";
 import {useDocumentDataOnce} from "react-firebase-hooks/firestore";
 import firebase from "../modules/firebase";
 
+import Navibar from "../components/navibar.jsx";
 import UserBio from "../components/user/user-bio";
 import UserDetail from "../components/user/user-detail";
 import UserStat from "../components/user/user-stat";
@@ -31,7 +32,7 @@ export default function User(){
                             console.log("No doc exist!");
                         }
                     }).catch((error)=>{
-                        console.log("Some error happened!");
+                        console.log(error, " occurred at loading User posts!");
                     });
                     if (res){
                         return res;
@@ -47,17 +48,16 @@ export default function User(){
         <>
         {(()=>{
             if (value){
-                // console.log(value);
                 return (
                     <Row className="justify-content-center">
                         <Col sm={8} lg={4}>
-                            <UserBio info={value}/>
-                            <UserDetail info={value.detail}/>
+                            <UserBio info={value} />
+                            <UserDetail info={value.detail} username={value.username} />
                             <UserStat />
                         </Col>
                         <Col sm={12} lg={7}>
                             <UserCalendar info={dates}/>
-                            <UserPost info={dates} author={value}/>
+                            <UserPost info={dates} author={value} />
                         </Col>
                     </Row>
                 );

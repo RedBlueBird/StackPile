@@ -6,12 +6,6 @@ import Card from "react-bootstrap/Card";
 import Post from "../post";
 
 export default function UserPost(p){
-
-    useEffect(()=>{
-        console.log(p.author);
-        console.log(p.info);
-    },[p]);
-
     return (
         <>
         <Card className="shadow mt-3">

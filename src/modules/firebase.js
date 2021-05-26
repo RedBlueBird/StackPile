@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import "firebase/analytics";
+import "firebase/storage";
 
 const config = {
   apiKey: "AIzaSyAlUe-PGNLtrd7fjVmkZh3Dz8l-bFpycLE",
@@ -20,9 +21,11 @@ if (!firebase.apps.length) {
 }
 
 export default {
-    auth: firebase.auth(),
-    firestore: firebase.firestore(),
-    analytics: firebase.analytics()
+  firebase: firebase,
+  auth: firebase.auth(),
+  firestore: firebase.firestore(),
+  analytics: firebase.analytics(),
+  storage: firebase.storage()
 }
 
 // module.exports.auth = firebase.auth();

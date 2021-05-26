@@ -6,10 +6,11 @@ import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 
+import {AiOutlineEdit} from "react-icons/ai";
+import {BsBoxArrowUpRight} from "react-icons/bs";
 import {GiRainbowStar} from "react-icons/gi";
 import {BsPersonLinesFill, BsPeopleFill} from "react-icons/bs";
 import {FaGithub, FaGoogle} from "react-icons/fa";
-import {RiEditBoxLine} from "react-icons/ri";
 
 import pfp_placeholder from "../../images/pfp-placeholder.png";
 
@@ -19,13 +20,13 @@ export default function UserBio(p){
             <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
                     <h6 className="m-0">Profile</h6>
-                    <RiEditBoxLine size={"1.2em"} style={{color:"Gray"}} />
+                    <AiOutlineEdit size={"1.2em"} style={{color:"Gray"}} />
                 </div>
             </Card.Header>
             <Card.Body>
                 <Row>
                     <Col xs={4}>
-                        <img className="rounded-circle" src={pfp_placeholder} alt="profile picture placeholder" 
+                        <img className="rounded-circle" src={p.info.pfp_url}
                             style={{width: "100%", height: "auto"}}/>
                     </Col>
                     <Col xs={8}>

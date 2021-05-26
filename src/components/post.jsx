@@ -22,14 +22,16 @@ export default function Post(p){
                 <BsFillCaretDownFill size={"1.4em"} style={{color:"DimGray"}}/>
             </Card.Header>
             <div className="flex-row ml-2 my-2">
-                <Link to={"/user/admin"}>
-                    <img className="rounded-circle" height="40" src={pfp_placeholder} alt="logo placeholder"/>
+                <Link to={`/user/${p.author.username}`}>
+                    <img className="rounded-circle" height="40" src={p.author.pfp_url} alt="logo placeholder"/>
                 </Link>
             </div>
             <Col>
                 <Row className="justify-content-between px-2 pt-2 pb-1">
                     <Row className="align-items-center ml-0">
-                        <Badge variant="primary" className="px-2 py-1">{p.author.username}</Badge>
+                        <Link to={`/user/${p.author.username}`}>
+                            <Badge variant="primary" className="px-2 py-1">{p.author.username}</Badge>
+                        </Link>
                         <Badge pill className="d-flex justify-content-between align-items-center">
                             <p className="m-0 pr-1"><GiRainbowStar style={{color:"Gray"}}/></p>
                             <p className="m-0">{p.author.clout}</p>

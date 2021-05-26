@@ -2,7 +2,7 @@ import React from 'react';
 import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom";
 import Container from "react-bootstrap/Container";
 
-import Navibar from "./components/navibar.jsx";
+import NaviBar from "./components/navibar";
 import Home from "./pages/home.jsx";
 import User from "./pages/user.jsx";
 
@@ -12,7 +12,7 @@ export default function App(){
   return (
     <BrowserRouter>
       <Container>
-        <Navibar />
+        <NaviBar />
         <Switch>
           <Route exact path="/">
             <Redirect to="/home" />
