@@ -11,10 +11,9 @@ import {useAuthState} from "react-firebase-hooks/auth";
 import {GiRainbowStar} from "react-icons/gi";
 import {FaBell} from "react-icons/fa";
 import {MdAddCircle} from "react-icons/md";
-import {SiReddit} from "react-icons/si";
 import {HiChevronDown} from "react-icons/hi";
 
-import pfp_placeholder from "../images/pfp-placeholder.png";
+import { ReactComponent as Logo } from "../images/stackpile-logo.svg"; 
 
 export default function Navibar(p){
     const [user] = useAuthState(firebase.auth);
@@ -67,7 +66,8 @@ export default function Navibar(p){
                 <div className="d-flex flex-row align-items-center">
                     <Navbar.Brand>
                         <Link to="/">
-                            <SiReddit size={"2em"} style={{color:"#FF5700"}}/>
+                            <Logo style={{width:"2em", height:"2em"}} />
+                            {/* <SiReddit size={"2em"} style={{color:"#FF5700"}}/> */}
                         </Link>
                     </Navbar.Brand>
                     <div className="rounded flex-fill p-2 m-1" style={{backgroundColor:"white"}}>

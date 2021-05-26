@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
-import Moment from "react-moment";
 import DateFormat from "dateformat";
 import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
@@ -17,7 +16,6 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import detail from "../../modules/detail";
 import 'react-datepicker/dist/react-datepicker.css';
-import { UpdateModeEnum } from "chart.js";
 
 export default function UserDetail(p){
     const [mode, setMode] = useState("display");
@@ -147,7 +145,7 @@ export default function UserDetail(p){
                     </div>
                 </div>
                 <div className="d-flex justify-content-around align-items-center mt-2">
-                    <Button variant="primary" onClick={()=>detailUpdate()}>
+                    <Button variant="info" onClick={()=>detailUpdate()}>
                         Confirm
                     </Button>
                     <Button variant="outline-secondary" onClick={()=>setMode("display")}>
@@ -155,10 +153,8 @@ export default function UserDetail(p){
                     </Button>
                 </div>
             </Card.Body>
-        </Card>
-        
+        </Card>  
         }
-
         </>
     );
 }
