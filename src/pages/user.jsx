@@ -51,7 +51,7 @@ export default function User(){
                 return (
                     <Row className="justify-content-center">
                         <Col sm={8} lg={4}>
-                            <UserBio info={value} />
+                            <UserBio info={value} username={value.username} />
                             <UserDetail info={value.detail} username={value.username} />
                             <UserStat />
                         </Col>
