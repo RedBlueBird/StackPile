@@ -25,7 +25,7 @@ export default function UserDetail(p){
     const [education, setEducation] = useState(p.info["education"]);
 
     function detailUpdate(){
-        firebase.firestore.collection("users").doc(p.username).set({
+        firebase.firestore().collection("users").doc(p.uid).set({
             detail: {created_at: p.info["created_at"],
                      birthday, gender, location, education}
         },{merge: true})
@@ -44,7 +44,9 @@ export default function UserDetail(p){
             <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
                     <h6 className="m-0">Detail</h6>
-                    <AiOutlineEdit size={"1.2em"} style={{color:"Gray", cursor: "pointer"}} onClick={()=>setMode("edit")} />
+                    {firebase.auth().currentUser && firebase.auth().currentUser.uid == p.uid &&
+                        <AiOutlineEdit size={"1.2em"} style={{color:"Gray", cursor: "pointer"}} onClick={()=>setMode("edit")} />
+                    }
                 </div>
             </Card.Header>
             <Card.Body>

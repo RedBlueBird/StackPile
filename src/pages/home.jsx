@@ -12,7 +12,7 @@ import HomeCreate from "../components/home/home-create";
 import HomePost from "../components/home/home-post";
 
 export default function User(){
-    let userRef = firebase.firestore.collection("users").doc("admin");
+    let userRef = firebase.firestore().collection("users").doc("admin");
     const [value, loading, error] = useDocumentDataOnce(userRef);
 
     // const [pfpUrl, setPfpUrl] = useState("");
@@ -20,7 +20,7 @@ export default function User(){
     // useEffect(()=>{
     //     if (value){
     //         let pfpUrlPath = `users/${value.username}/${value.pfp_url}`;
-    //         firebase.storage.ref(pfpUrlPath).getDownloadURL()
+    //         firebase.storage().ref(pfpUrlPath).getDownloadURL()
     //         .then((url)=>{
     //             setPfpUrl(url);
     //         })

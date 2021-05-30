@@ -11,19 +11,17 @@ import {GiRainbowStar} from "react-icons/gi";
 import {BsFillCaretUpFill, BsFillCaretDownFill} from "react-icons/bs";
 import {AiOutlineLink, AiFillTags} from "react-icons/ai";
 
-import pfp_placeholder from "../images/pfp-placeholder.png";
-
 export default function Post(p){
     return (
         <Card className="shadow mt-3 flex-row">
             <Card.Header className="border-0 px-1 d-flex flex-column align-items-center">
-                <BsFillCaretUpFill size={"1.4em"} style={{color:"DimGray"}}/>
+                <BsFillCaretUpFill size={"1.4em"} style={{color:"DimGray", cursor:"pointer"}}/>
                     <h6 className="m-0">{p.info.upvote-p.info.downvote}</h6>
-                <BsFillCaretDownFill size={"1.4em"} style={{color:"DimGray"}}/>
+                <BsFillCaretDownFill size={"1.4em"} style={{color:"DimGray", cursor:"pointer"}}/>
             </Card.Header>
             <div className="flex-row ml-2 my-2">
                 <Link to={`/user/${p.author.username}`}>
-                    <img className="rounded-circle" height="40" src={p.author.pfp_url} alt="logo placeholder"/>
+                    <img className="rounded-circle" src={p.author.pfp_url} style={{width:"2.5em", height:"2.5em"}} />
                 </Link>
             </div>
             <Col>

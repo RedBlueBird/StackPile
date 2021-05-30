@@ -15,33 +15,48 @@ import UserPost from "../components/user/user-post";
 
 export default function User(){
     const {userid} = useParams();
-    let userRef = firebase.firestore.collection("users").doc(userid);
-    const [value, loading, error] = useDocumentDataOnce(userRef);
-
+    const [userRef] = useDocumentDataOnce(firebase.firestore().collection("usernames").doc(userid));
+    const [value, setValue] = useState();
     const [dates, setDates] = useState([]);
 
     useEffect(()=>{
-        if (value){
-            (async () => {
-                let collect = await Promise.all(value.post.map(ref => {
-                    let res = ref.get()
-                    .then((doc) => {
-                        if (doc.exists){
-                            return doc.data();
-                        }else{
-                            console.log("No doc exist!");
-                        }
-                    }).catch((error)=>{
-                        console.log(error, " occurred at loading User posts!");
-                    });
-                    if (res){
-                        return res;
-                    }
-                }));
-                collect.sort((a,b)=>b-a);
-                setDates(collect);
-            })();
+        if (userRef){
+            userRef.user_ref.get()
+            .then((doc)=>{
+                if (doc.exists){
+                    setValue(doc.data());
+                }else{
+                    console.log("No user exists");
+                }
+            }).catch((error)=>{
+                console.log(error, " occurred when tyring to load a user profile page");
+            });
         }
+    },[userRef]);
+
+    useEffect(async () => {
+        let collect;
+        if (value){
+            collect = await Promise.all(value.post.map(ref => {
+                let res = ref.get()
+                .then((doc) => {
+                    if (doc.exists){
+                        return doc.data();
+                    }else{
+                        console.log("No doc exist!");
+                    }
+                }).catch((error)=>{
+                    console.log(error, " occurred at loading User posts!");
+                });
+                if (res){
+                    return res;
+                }
+            }));
+            collect.sort((a,b)=>b-a);
+        }else{
+            collect = [];
+        }
+        setDates(collect);
     },[value]);
 
     return (
@@ -51,8 +66,8 @@ export default function User(){
                 return (
                     <Row className="justify-content-center">
                         <Col sm={8} lg={4}>
-                            <UserBio info={value} username={value.username} />
-                            <UserDetail info={value.detail} username={value.username} />
+                            <UserBio info={value} />
+                            <UserDetail info={value.detail} uid={value.uid} />
                             <UserStat />
                         </Col>
                         <Col sm={12} lg={7}>

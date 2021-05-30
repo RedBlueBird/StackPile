@@ -16,19 +16,68 @@ import {HiChevronDown} from "react-icons/hi";
 import { ReactComponent as Logo } from "../images/stackpile-logo.svg"; 
 
 export default function Navibar(p){
-    const [user] = useAuthState(firebase.auth);
+    const [user] = useAuthState(firebase.auth());
     const [userInfo, setUserInfo] = useState({});
+
+    let defaultFields = {
+        username: "username",
+        pfp_url: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
+        about_self: "",
+        clout: 0,
+        detail: {birthday: null,
+                created_at: new Date(),
+                education: "",
+                gender: "",
+                location: ""},
+        post_count: 0,
+        post: [],
+        following_count: 0,
+        following: [],
+        follower_count: 0,
+        follower: [],
+        uid: "",
+    }
+
+    function userSetUp(){
+        let displayName = user.displayName.split(" ").join("_");
+        firebase.firestore().collection("usernames").doc(displayName)
+        .set({
+            user_ref: firebase.firestore().doc(`users/${user.uid}`)
+        })
+        .then(()=>{
+            console.log("Username successfully registered!");
+        }).catch((error) => {
+            console.log(error, " happened when trying to register user's username!");
+        });
+        defaultFields.username = displayName;
+        defaultFields.uid = user.uid;
+        firebase.firestore().collection("users").doc(user.uid)
+        .set(defaultFields)
+        .then(() => {
+            console.log("User account setup successfully completed!");
+        }).catch((error) => {
+            console.log(error, " happened when a user is trying to register!");
+        });
+        firebase.auth().currentUser.updateProfile({
+            displayName: displayName
+        }).then(()=>{
+            console.log("DisplayName successfully changed!");
+        }).catch((error)=>{
+            console.log(error, " happened when trying to change user's display name!")
+        });
+    }
 
     useEffect(()=>{
         console.log(user);
         if (user){
-            let userRef = firebase.firestore.collection("users").doc(user.displayName);
+            let userRef = firebase.firestore().collection("users").doc(user.uid);
             userRef.get()
             .then((doc)=>{
                 if (doc.exists){
                     setUserInfo(doc.data());
                 }else{
-                    console.log("User account data is empty!")
+                    userSetUp();
+                    setUserInfo(defaultFields);
                 }
             }).catch((error)=>{
                 console.log(error, " occured when trying to get user account data!")
@@ -39,10 +88,10 @@ export default function Navibar(p){
     function SignIn(){
         const signInWithGoogle = () => {
           const provider = new firebase.firebase.auth.GoogleAuthProvider();
-          firebase.auth.signInWithPopup(provider);
+          firebase.auth().signInWithPopup(provider);
         }
       
-        return !firebase.auth.currentUser && (
+        return !firebase.auth().currentUser && (
             <button onClick={signInWithGoogle} className="btn btn-primary">Sign In</button>
         )
     }
@@ -75,7 +124,7 @@ export default function Navibar(p){
                     </div>
                 </div>
                 <SignIn />
-                {firebase.auth.currentUser &&
+                {firebase.auth().currentUser &&
                 <div className="d-flex flex-row-reverse align-items-center">
                     {userInfo &&
                     <Dropdown>
@@ -83,7 +132,7 @@ export default function Navibar(p){
                             <div className="d-flex flex-row-reverse rounded align-items-center px-1 m-1" style={{backgroundColor:"white"}}>
                                 <HiChevronDown style={{color:"Gray"}} />
                                 <div className="pr-1">
-                                    <img className="rounded-circle" height="50" src={userInfo.pfp_url} />
+                                    <img className="rounded-circle" src={userInfo.pfp_url} style={{width:"2.5em",height:"2.5em"}} />
                                 </div>
                                 <Col className="px-2">
                                     <Badge variant="primary" className="m-0 mb-1 px-2 py-1">{userInfo.username}</Badge>
@@ -99,7 +148,7 @@ export default function Navibar(p){
                                 Profile
                             </Dropdown.Item>
                             <Dropdown.Divider />
-                            <Dropdown.Item className="text-danger" onClick={() => firebase.auth.signOut()}>
+                            <Dropdown.Item className="text-danger" onClick={() => {firebase.auth().signOut(); window.location.reload();}}>
                                 Sign Out
                             </Dropdown.Item>
                         </Dropdown.Menu>

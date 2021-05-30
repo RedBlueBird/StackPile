@@ -22,10 +22,10 @@ if (!firebase.apps.length) {
 
 export default {
   firebase: firebase,
-  auth: firebase.auth(),
-  firestore: firebase.firestore(),
-  analytics: firebase.analytics(),
-  storage: firebase.storage()
+  auth: firebase.auth,
+  firestore: firebase.firestore,
+  analytics: firebase.analytics,
+  storage: firebase.storage
 }
 
 // module.exports.auth = firebase.auth();

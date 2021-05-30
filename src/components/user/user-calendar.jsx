@@ -16,7 +16,7 @@ export default function UserCalendar(p){
     let endDate = new Date();
 
     useEffect(()=>{
-        if (p.info.length > 0){
+        if (p.info){
             (async () => {
                 let collect = [{date:new Date("1000-01-01"), count:1}];
                 for (let i in p.info){
