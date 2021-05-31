@@ -44,7 +44,7 @@ export default function Post(p){
                         <Card.Text>
                             {p.info.message}
                         </Card.Text>
-                        {p.info.source.length && 
+                        {/* {p.info.source.length && 
                             <Card.Text className="mb-0">
                                 <AiOutlineLink />{" "}
                                 {(()=>{
@@ -56,14 +56,13 @@ export default function Post(p){
                                     return (<>{badges}</>);
                                 })()}
                             </Card.Text>
-                        }
+                        } */}
                         <Card.Text>
                             <AiFillTags />{" "}
                             {(()=>{
                                 let badges = [];
                                 for (let tag in p.info.tag){
-                                    badges.push(<Badge pill variant="info" key={uuid()}>{p.info.tag[tag]}</Badge>);
-                                    badges.push(" ");
+                                    badges.push(<Badge pill className="mr-1" variant="info" key={uuid()}>{p.info.tag[tag]["topic"]}</Badge>);
                                 }
                                 return (<>{badges}</>);
                             })()}

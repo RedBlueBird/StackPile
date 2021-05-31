@@ -14,10 +14,12 @@ import {MdAddCircle} from "react-icons/md";
 import {HiChevronDown} from "react-icons/hi";
 
 import { ReactComponent as Logo } from "../images/stackpile-logo.svg"; 
+import Create from "./create";
 
 export default function Navibar(p){
     const [user] = useAuthState(firebase.auth());
     const [userInfo, setUserInfo] = useState({});
+    const [showCreate, setShowCreate] = useState(false);
 
     let defaultFields = {
         username: "username",
@@ -107,8 +109,11 @@ export default function Navibar(p){
         >
           {children}
         </div>
-      ));
+    ));
       
+    const handleShowCreate = () => setShowCreate(true);
+    const handleHideCreate = () => setShowCreate(false);
+
     return (
         <Navbar bg="light" sticky="top" className="d-flex justify-content-center p-0">
             <div className="d-flex justify-content-between align-items-center" style={{width:"95%"}}>
@@ -154,12 +159,13 @@ export default function Navibar(p){
                         </Dropdown.Menu>
                     </Dropdown> 
                     }
-                    <div className="rounded-circle p-2 m-1" style={{backgroundColor:"white"}}>
+                    <div className="rounded-circle p-2 m-1" style={{backgroundColor:"white", cursor:"pointer"}}>
                         <FaBell size={"1.8em"} style={{color:"dimGray"}}/>
                     </div>
-                    <div className="rounded-circle p-2 m-1" style={{backgroundColor:"white"}}>
+                    <div className="rounded-circle p-2 m-1" onClick={handleShowCreate} style={{backgroundColor:"white", cursor:"pointer"}}>
                         <MdAddCircle size={"2em"} style={{color:"dimGray"}}/>
                     </div>
+                    <Create show={showCreate} handleShow={handleShowCreate} handleHide={handleHideCreate} author={userInfo} />
                 </div>
                 }   
             </div>

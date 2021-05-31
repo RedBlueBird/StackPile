@@ -25,7 +25,7 @@ export default function HomePost(){
             </Card.Header>
             <div className="flex-row ml-2 my-2">
                 <Link to={"/user/admin"}>
-                    <img className="rounded-circle" height="40" src={pfp_placeholder} alt="logo placeholder"/>
+                    <img className="rounded-circle" src={pfp_placeholder} alt="logo placeholder" style={{width:"2.5em", height:"2.5em"}}/>
                 </Link>
             </div>
             <div className="col">
