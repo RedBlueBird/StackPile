@@ -3,6 +3,8 @@ import {Link, useParams} from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import InputGroup from "react-bootstrap/InputGroup";
 
+import firebase from "../../modules/firebase";
+
 import {AiOutlineLink, AiFillTags, AiOutlineSend} from "react-icons/ai";
 import {IoMdSend} from "react-icons/io";
 import {GiCurlyWing} from "react-icons/gi";
@@ -18,6 +20,9 @@ export default function HomeCreate(p){
     const handleHideCreate = () => setShowCreate(false);
 
     return (
+      <>
+      {firebase.auth().currentUser && 
+      <>
         <Card className="shadow my-2">
             <Card.Body className="p-3">
                 <div className="d-flex align-items-center">
@@ -34,9 +39,12 @@ export default function HomeCreate(p){
                             </InputGroup.Append>
                         </InputGroup>
                     </div>
-                    <Create show={showCreate} handleShow={handleShowCreate} handleHide={handleHideCreate} author={p.author} />
                 </div>
             </Card.Body>
         </Card>
+        <Create show={showCreate} handleShow={handleShowCreate} handleHide={handleHideCreate} author={p.author} />
+      </>
+      }
+      </>
     );
 }
