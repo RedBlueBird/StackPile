@@ -124,9 +124,9 @@ export default function Navibar(p){
                             {/* <SiReddit size={"2em"} style={{color:"#FF5700"}}/> */}
                         </Link>
                     </Navbar.Brand>
-                    <div className="rounded flex-fill p-2 m-1" style={{backgroundColor:"white"}}>
+                    {/* <div className="rounded flex-fill p-2 m-1" style={{backgroundColor:"white"}}>
                         <p className="block-quote m-0">{"Search placeholder"}</p>
-                    </div>
+                    </div> */}
                 </div>
                 <SignIn />
                 {firebase.auth().currentUser &&
