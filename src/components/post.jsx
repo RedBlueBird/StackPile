@@ -29,7 +29,7 @@ export default function Post(p){
                 console.log(error, " happened when trying to fetch a post's author!");
             });
         }
-    },[p.info]);
+    },[p.info, p.author]);
 
     return (
         <>

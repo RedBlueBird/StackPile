@@ -19,8 +19,8 @@ import Resizer from "react-image-file-resizer";
 
 export default function UserBio(p){
     const [mode, setMode] = useState("display");
-    const [about, setAbout] = useState(p.info.about_self);
-    const [aboutDraft, setAboutDraft] = useState(p.info.about_self);
+    const [about, setAbout] = useState(p.author.about_self);
+    const [aboutDraft, setAboutDraft] = useState(p.author.about_self);
     const aboutCharLimit = 250;
     const [pfpFile, setPfpFile] = useState();
     const [pfpDataUrl, setPfpDataUrl] = useState("");
@@ -74,7 +74,7 @@ export default function UserBio(p){
 
     function bioUpdate(){
         if (aboutDraft.length < aboutCharLimit && pfpMsg === ""){
-            firebase.firestore().collection("users").doc(p.info.uid).set({
+            firebase.firestore().collection("users").doc(p.author.uid).set({
                 about_self: aboutDraft
             },{merge: true})
             .then(() => {
@@ -87,7 +87,7 @@ export default function UserBio(p){
             });
             if (pfpFile){
                 console.log(pfpFile.size);
-                let filePath = `users/${p.info.uid}/${pfpFile.name}`;
+                let filePath = `users/${p.author.uid}/${pfpFile.name}`;
                 let task = firebase.storage().ref(filePath).put(pfpFile);
                 task.on("state_changed",
                     (snapshot)=>{
@@ -100,7 +100,7 @@ export default function UserBio(p){
                         task.snapshot.ref.getDownloadURL()
                         .then((url) => {
                             console.log(url);
-                            firebase.firestore().collection("users").doc(p.info.uid).set({
+                            firebase.firestore().collection("users").doc(p.author.uid).set({
                                 pfp_url: url
                             },{merge: true})
                             .then(() => {
@@ -126,7 +126,7 @@ export default function UserBio(p){
             <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
                     <h6 className="m-0">Profile</h6>
-                    {firebase.auth().currentUser && firebase.auth().currentUser.uid === p.info.uid &&
+                    {firebase.auth().currentUser && firebase.auth().currentUser.uid === p.author.uid &&
                         <AiOutlineEdit size={"1.2em"} style={{color:"Gray", cursor: "pointer"}} onClick={()=>setMode("edit")} />
                     }
                 </div>
@@ -134,28 +134,28 @@ export default function UserBio(p){
             <Card.Body>
                 <Row>
                     <Col xs={4}>
-                        <img className="rounded-circle" src={pfpDataUrl ? pfpDataUrl : p.info.pfp_url}
+                        <img className="rounded-circle" src={pfpDataUrl ? pfpDataUrl : p.author.pfp_url}
                             alt="" style={{width: "6em", height: "6em"}}/>
                     </Col>
                     <Col xs={8}>
-                        <h4>{p.info.username}</h4>
+                        <h4>{p.author.username}</h4>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <GiRainbowStar style={{color:"Gray"}}/> Clout
                             </p>
-                            <Badge pill variant="info">{p.info.clout}</Badge>
+                            <Badge pill variant="info">{p.author.clout}</Badge>
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <BsPersonLinesFill style={{color:"Gray"}}/> Following
                             </p>
-                            <Badge pill variant="info">{p.info.following_count}</Badge>
+                            <Badge pill variant="info">{p.author.following_count}</Badge>
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <BsPeopleFill style={{color:"Gray"}}/> Followers
                             </p>
-                            <Badge pill variant="info">{p.info.follower_count}</Badge>
+                            <Badge pill variant="info">{p.author.follower_count}</Badge>
                         </div>
                     </Col>
                 </Row>
@@ -168,7 +168,7 @@ export default function UserBio(p){
                         <ReactMarkdown children={about} components={{img: props => <img alt="parse disabled in profile" /> }} />
                     }
                 </div>
-                {firebase.auth().currentUser && firebase.auth().currentUser.uid !== p.info.uid &&
+                {firebase.auth().currentUser && firebase.auth().currentUser.uid !== p.author.uid &&
                     <Button variant="primary" block>
                         {"Follow"}
                     </Button>
@@ -189,31 +189,31 @@ export default function UserBio(p){
                     <Col xs={4}>
                         <input type="file" id="pfpChange" accept="image/jpeg, image/png" onChange={processPfp} hidden />
                         <label htmlFor="pfpChange" style={{cursor:"pointer"}} >
-                           <img className="rounded-circle" src={pfpDataUrl ? pfpDataUrl : p.info.pfp_url}
+                           <img className="rounded-circle" src={pfpDataUrl ? pfpDataUrl : p.author.pfp_url}
                             alt="" style={{width: "6em", height: "6em"}}/> 
                             <small className="text-danger">{pfpMsg}</small>
                         </label>
                         
                     </Col>
                     <Col xs={8}>
-                        <h4>{p.info.username}</h4>
+                        <h4>{p.author.username}</h4>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <GiRainbowStar style={{color:"Gray"}}/> Clout
                             </p>
-                            <Badge pill variant="info">{p.info.clout}</Badge>
+                            <Badge pill variant="info">{p.author.clout}</Badge>
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <BsPersonLinesFill style={{color:"Gray"}}/> Following
                             </p>
-                            <Badge pill variant="info">{p.info.following_count}</Badge>
+                            <Badge pill variant="info">{p.author.following_count}</Badge>
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <BsPeopleFill style={{color:"Gray"}}/> Followers
                             </p>
-                            <Badge pill variant="info">{p.info.follower_count}</Badge>
+                            <Badge pill variant="info">{p.author.follower_count}</Badge>
                         </div>
                     </Col>
                 </Row>

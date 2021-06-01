@@ -15,7 +15,7 @@ import UserPost from "../components/user/user-post";
 export default function User(){
     const {userid} = useParams();
     const [userRef] = useDocumentDataOnce(firebase.firestore().collection("usernames").doc(userid));
-    const [value, setValue] = useState();
+    const [user, setUser] = useState();
     const [dates, setDates] = useState([]);
 
     useEffect(()=>{
@@ -23,7 +23,7 @@ export default function User(){
             userRef.user_ref.get()
             .then((doc)=>{
                 if (doc.exists){
-                    setValue(doc.data());
+                    setUser(doc.data());
                 }else{
                     console.log("No user exists");
                 }
@@ -36,8 +36,8 @@ export default function User(){
     useEffect(() => {
         (async () => {
             let collect;
-            if (value){
-                collect = await Promise.all(value.post.map(ref => {
+            if (user){
+                collect = await Promise.all(user.post.map(ref => {
                     let res = ref.get()
                     .then((doc) => {
                         if (doc.exists){
@@ -58,22 +58,22 @@ export default function User(){
             }
             setDates(collect);
         })();
-    },[value]);
+    },[user]);
 
     return (
         <>
         {(()=>{
-            if (value){
+            if (user){
                 return (
                     <Row className="justify-content-center">
                         <Col sm={8} lg={4}>
-                            <UserBio info={value} />
-                            <UserDetail info={value.detail} uid={value.uid} />
+                            <UserBio author={user} />
+                            <UserDetail info={user.detail} uid={user.uid} />
                             <UserStat />
                         </Col>
                         <Col sm={12} lg={7}>
                             <UserCalendar info={dates}/>
-                            <UserPost info={dates} author={value} />
+                            <UserPost info={dates} author={user} />
                         </Col>
                     </Row>
                 );

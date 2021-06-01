@@ -20,13 +20,15 @@ if (!firebase.apps.length) {
   firebase.app();
 }
 
-export default {
+const services = {
   firebase: firebase,
   auth: firebase.auth,
   firestore: firebase.firestore,
   analytics: firebase.analytics,
   storage: firebase.storage
-}
+};
+
+export default services;
 
 // module.exports.auth = firebase.auth();
 // module.exports.firestore = firebase.firestore();

@@ -1,4 +1,4 @@
-export default {
+const detail = {
     country: [
         { code: 'AF', label: 'Afghanistan', value: 'Afghanistan' },
         { code: 'AX', label: 'Åland Islands', value: 'Åland Islands' },
@@ -426,3 +426,5 @@ export default {
         {label: "Uneducated", value: "Uneducated"}
     ],
 };
+
+export default detail;
