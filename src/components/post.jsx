@@ -17,7 +17,7 @@ export default function Post(p){
     const [author, setAuthor] = useState(p.author);
 
     useEffect(()=>{
-        if (!p.author && p.info){
+        if (Object.keys(p.author).length == 0 && p.info){
             p.info.author.get()
             .then((doc) => {
                 if (doc.exists){

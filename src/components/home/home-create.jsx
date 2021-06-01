@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -14,6 +14,29 @@ export default function HomeCreate(p){
     const handleShowCreate = () => setShowCreate(true);
     const handleHideCreate = () => setShowCreate(false);
 
+    const createPrompts = [
+        "Got anything to humble flex with today?",
+        "Can blind people see their dreams?",
+        "If roses are red, why are violets blue?",
+        "What if everyone jumped at once?",
+        "How high can we build?",
+        "Where's the most dangerous place on earth?",
+        "Does numbers beyond infinity exist?",
+        "Can a computer keep the same data forever?",
+        "How old can we get?",
+        "What is the Earth worth?",
+        "What is the greatest honor?",
+        "How to create secure passwords?",
+        "How much does the internet weigh?",
+        "What is the resolution of our eyes?",
+        "Can the chicken fly over the road?",
+        "Can plants ever replace meat?"
+    ];
+    const [prompt, setPrompt] = useState("");
+    useEffect(()=>{
+        setPrompt(createPrompts[Math.floor(Math.random() * createPrompts.length)]);
+    },[]);
+
     return (
       <>
       {p.author && 
@@ -26,7 +49,7 @@ export default function HomeCreate(p){
                     </Link>
                     <div onClick={handleShowCreate} className="flex-fill" >
                         <InputGroup>
-                            <div className="form-control text-muted">Got anything to humble flex with?</div>
+                            <div className="form-control text-muted">{prompt}</div>
                             <InputGroup.Append>
                                 {/* <span className="btn btn-outline-info border"><AiOutlineLink/></span> */}
                                 <span className="btn btn-outline-info border"><AiFillTags /></span>
