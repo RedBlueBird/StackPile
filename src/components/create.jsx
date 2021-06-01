@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import {Redirect} from "react-router-dom";
+import React, {useState} from "react";
 import {v4 as uuid} from "uuid";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -37,7 +36,7 @@ export default function Create(p){
     function addTag(){
         if (currField && currTag){
             for (let i in tags){
-                if (tags[i].field == currField && tags[i].topic == currTag){
+                if (tags[i].field === currField && tags[i].topic === currTag){
                     return;
                 }
             }
@@ -49,11 +48,11 @@ export default function Create(p){
     }
 
     function sharePost(){
-        if (message.length == 0){
+        if (message.length === 0){
             setTagMsg("Post cannot be left blank");
             return;
         }
-        if (tags.length == 0){
+        if (tags.length === 0){
             setTagMsg("Need at least one tag");
             return ;
         }
@@ -113,8 +112,8 @@ export default function Create(p){
                 <div className="border shadow-sm p-2">
                     <ReactMarkdown
                         className={message ? "" : "text-muted"}
-                        children={message ? message : "Preview text markdown"}
-                        components={{img: props => <img src={props.src} style={{width:"100%"}} /> }}
+                        children={message ? message : "Preview markdown"}
+                        components={{img: props => <img src={props.src} alt="" style={{width:"100%"}} /> }}
                     />
                 </div>
                 <Row className="d-flex align-items-start px-3 mt-3" >

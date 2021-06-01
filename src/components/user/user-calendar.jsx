@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
 import DateFormat from "dateformat";
 import ReactTooltip from "react-tooltip";
 import Card from "react-bootstrap/Card";
@@ -20,9 +19,9 @@ export default function UserCalendar(p){
             (async () => {
                 let collect = [{date:new Date("1000-01-01"), count:1}];
                 for (let i in p.info){
-                    if (p.info[i].created_at.toDate().getFullYear() == collect[collect.length-1].date.getFullYear() &&
-                        p.info[i].created_at.toDate().getMonth() == collect[collect.length-1].date.getMonth() &&
-                        p.info[i].created_at.toDate().getDate() == collect[collect.length-1].date.getDate()){
+                    if (p.info[i].created_at.toDate().getFullYear() === collect[collect.length-1].date.getFullYear() &&
+                        p.info[i].created_at.toDate().getMonth() === collect[collect.length-1].date.getMonth() &&
+                        p.info[i].created_at.toDate().getDate() === collect[collect.length-1].date.getDate()){
                         collect[collect.length-1].count++;
                     }else{
                         collect.push({date: p.info[i].created_at.toDate(), count:1});
@@ -38,7 +37,7 @@ export default function UserCalendar(p){
         {dates.length > 0 &&
         <Card className="shadow my-2">
             <Card.Header>
-                <h6 className="m-0">{dates.length-1} post{dates.length != 2 ? "s":""} in the past year</h6>
+                <h6 className="m-0">{dates.length-1} post{dates.length !== 2 ? "s":""} in the past year</h6>
             </Card.Header>
             <Card.Body>
                 <CalendarHeatmap 
@@ -55,7 +54,7 @@ export default function UserCalendar(p){
                     }}
                     tooltipDataAttrs={(value)=>{
                         return {
-                            "data-tip": `${value.count ? value.count : 0} post${value.count != 1 ? "s":""} on ${DateFormat(value.date,"longDate")}`
+                            "data-tip": `${value.count ? value.count : 0} post${value.count !== 1 ? "s":""} on ${DateFormat(value.date,"longDate")}`
                         }
                     }}
                 />

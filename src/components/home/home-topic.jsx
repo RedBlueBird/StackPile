@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import React from "react";
 import {v4 as uuid} from "uuid";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";

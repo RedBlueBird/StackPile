@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import React, {useState} from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
@@ -42,7 +41,7 @@ export default function UserBio(p){
         if (!file){
             return;
         }
-        if (file.type != "image/png" && file.type != "image/jpeg"){
+        if (file.type !== "image/png" && file.type !== "image/jpeg"){
             setPfpMsg("Invalid image type");
             return;
         }
@@ -74,7 +73,7 @@ export default function UserBio(p){
     }
 
     function bioUpdate(){
-        if (aboutDraft.length < aboutCharLimit && pfpMsg == ""){
+        if (aboutDraft.length < aboutCharLimit && pfpMsg === ""){
             firebase.firestore().collection("users").doc(p.info.uid).set({
                 about_self: aboutDraft
             },{merge: true})
@@ -119,16 +118,15 @@ export default function UserBio(p){
             }
         }
     } 
-    console.log(firebase.auth().currentUser);
 
     return (
         <>
-        {mode == "display" &&
+        {mode === "display" &&
         <Card className="shadow my-2">
             <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
                     <h6 className="m-0">Profile</h6>
-                    {firebase.auth().currentUser && firebase.auth().currentUser.uid == p.info.uid &&
+                    {firebase.auth().currentUser && firebase.auth().currentUser.uid === p.info.uid &&
                         <AiOutlineEdit size={"1.2em"} style={{color:"Gray", cursor: "pointer"}} onClick={()=>setMode("edit")} />
                     }
                 </div>
@@ -137,7 +135,7 @@ export default function UserBio(p){
                 <Row>
                     <Col xs={4}>
                         <img className="rounded-circle" src={pfpDataUrl ? pfpDataUrl : p.info.pfp_url}
-                            style={{width: "6em", height: "6em"}}/>
+                            alt="" style={{width: "6em", height: "6em"}}/>
                     </Col>
                     <Col xs={8}>
                         <h4>{p.info.username}</h4>
@@ -167,10 +165,10 @@ export default function UserBio(p){
                 </div> */}
                 <div className="my-3">
                     {!about ? "This user left a blank bio!" :
-                        <ReactMarkdown children={about} components={{img: props => <img alt="profile image parse disabled" /> }} />
+                        <ReactMarkdown children={about} components={{img: props => <img alt="parse disabled in profile" /> }} />
                     }
                 </div>
-                {firebase.auth().currentUser && firebase.auth().currentUser.uid != p.info.uid &&
+                {firebase.auth().currentUser && firebase.auth().currentUser.uid !== p.info.uid &&
                     <Button variant="primary" block>
                         {"Follow"}
                     </Button>
@@ -178,7 +176,7 @@ export default function UserBio(p){
             </Card.Body>
         </Card>
         }
-        {mode == "edit" &&
+        {mode === "edit" &&
         <Card className="shadow my-2">
             <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
@@ -192,7 +190,7 @@ export default function UserBio(p){
                         <input type="file" id="pfpChange" accept="image/jpeg, image/png" onChange={processPfp} hidden />
                         <label htmlFor="pfpChange" style={{cursor:"pointer"}} >
                            <img className="rounded-circle" src={pfpDataUrl ? pfpDataUrl : p.info.pfp_url}
-                            style={{width: "6em", height: "6em"}}/> 
+                            alt="" style={{width: "6em", height: "6em"}}/> 
                             <small className="text-danger">{pfpMsg}</small>
                         </label>
                         

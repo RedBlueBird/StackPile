@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import React, {useState} from "react";
 import DateFormat from "dateformat";
 import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
@@ -8,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import firebase from "../../modules/firebase";
 
 import {AiOutlineEdit} from "react-icons/ai";
-import {BsBoxArrowUpRight, BsInfoCircle} from "react-icons/bs";
+import {BsBoxArrowUpRight} from "react-icons/bs";
 import {FaTransgender, FaBook} from "react-icons/fa";
 import {MdLocationOn, MdSchool, MdCake} from "react-icons/md";
 
@@ -39,12 +38,12 @@ export default function UserDetail(p){
 
     return (
         <>
-        {mode == "display" &&
+        {mode === "display" &&
         <Card className="shadow my-2">
             <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
                     <h6 className="m-0">Detail</h6>
-                    {firebase.auth().currentUser && firebase.auth().currentUser.uid == p.uid &&
+                    {firebase.auth().currentUser && firebase.auth().currentUser.uid === p.uid &&
                         <AiOutlineEdit size={"1.2em"} style={{color:"Gray", cursor: "pointer"}} onClick={()=>setMode("edit")} />
                     }
                 </div>
@@ -95,7 +94,7 @@ export default function UserDetail(p){
             </Card.Body>
         </Card>
         }
-        {mode == "edit" &&
+        {mode === "edit" &&
         <Card className="shadow my-2">
             <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">

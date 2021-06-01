@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import React from "react";
 import Card from "react-bootstrap/Card";
 
 import {Radar} from "react-chartjs-2";

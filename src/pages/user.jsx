@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import {useDocumentDataOnce} from "react-firebase-hooks/firestore";
 import firebase from "../modules/firebase";
 
-import Navibar from "../components/navibar.jsx";
 import UserBio from "../components/user/user-bio";
 import UserDetail from "../components/user/user-detail";
 import UserStat from "../components/user/user-stat";
@@ -34,29 +33,31 @@ export default function User(){
         }
     },[userRef]);
 
-    useEffect(async () => {
-        let collect;
-        if (value){
-            collect = await Promise.all(value.post.map(ref => {
-                let res = ref.get()
-                .then((doc) => {
-                    if (doc.exists){
-                        return doc.data();
-                    }else{
-                        console.log("No doc exist!");
+    useEffect(() => {
+        (async () => {
+            let collect;
+            if (value){
+                collect = await Promise.all(value.post.map(ref => {
+                    let res = ref.get()
+                    .then((doc) => {
+                        if (doc.exists){
+                            return doc.data();
+                        }else{
+                            console.log("No doc exist!");
+                        }
+                    }).catch((error)=>{
+                        console.log(error, " occurred at loading User posts!");
+                    });
+                    if (res){
+                        return res;
                     }
-                }).catch((error)=>{
-                    console.log(error, " occurred at loading User posts!");
-                });
-                if (res){
-                    return res;
-                }
-            }));
-            collect.sort((a,b)=>b-a);
-        }else{
-            collect = [];
-        }
-        setDates(collect);
+                }));
+                collect.sort((a,b)=>b.created_at.toDate()-a.created_at.toDate());
+            }else{
+                collect = [];
+            }
+            setDates(collect);
+        })();
     },[value]);
 
     return (

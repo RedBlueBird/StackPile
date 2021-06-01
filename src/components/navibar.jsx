@@ -72,8 +72,7 @@ export default function Navibar(p){
     useEffect(()=>{
         console.log(user);
         if (user){
-            let userRef = firebase.firestore().collection("users").doc(user.uid);
-            userRef.get()
+            firebase.firestore().collection("users").doc(user.uid).get()
             .then((doc)=>{
                 if (doc.exists){
                     setUserInfo(doc.data());
@@ -137,7 +136,7 @@ export default function Navibar(p){
                             <div className="d-flex flex-row-reverse rounded align-items-center px-1 m-1" style={{backgroundColor:"white"}}>
                                 <HiChevronDown style={{color:"Gray"}} />
                                 <div className="pr-1">
-                                    <img className="rounded-circle" src={userInfo.pfp_url} style={{width:"2.5em",height:"2.5em"}} />
+                                    <img className="rounded-circle" src={userInfo.pfp_url} alt="" style={{width:"2.5em",height:"2.5em"}} />
                                 </div>
                                 <Col className="px-2">
                                     <Badge variant="primary" className="m-0 mb-1 px-2 py-1">{userInfo.username}</Badge>
