@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 
 import {useDocumentDataOnce} from "react-firebase-hooks/firestore";
 import firebase from "../modules/firebase";
+import {useAuthState} from "react-firebase-hooks/auth";
 
 import {AiFillTags, AiOutlinePlus} from "react-icons/ai";
 import {MdCancel} from "react-icons/md";
@@ -64,7 +65,8 @@ export default function Create(p){
             created_at: new Date(),
             downvote: 0,
             upvote: 0,
-            tag: tags
+            tag: tags,
+            uid: ""
         })
         .then((docRef) => {
             console.log("New post successfully shared!");
@@ -73,17 +75,18 @@ export default function Create(p){
             setTagMsg("");
             postRef = docRef.id;
             p.handleHide();
+            firebase.firestore().collection("posts").doc(postRef).update({uid:postRef});
 
             firebase.firestore().collection("users").doc(p.author.uid).set({
                 post_count: p.author.post_count+1,
                 post: [...p.author.post, firebase.firestore().collection("posts").doc(postRef)]
             },{merge: true})
             .then(() => {
-                window.location.href = "/home";
+              window.location.href = "/home";
             })
-            .catch((error)=>{
-                console.log(error, " happened when trying to edit User Detail!");
-            });
+          .catch((error)=>{
+              console.log(error, " happened when trying to edit User Detail!");
+          });
 
         }).catch((error) => {
             console.log(error, " happened when a post is trying to be shared!");

@@ -1,101 +1,173 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {v4 as uuid} from "uuid";
-import Moment from "react-moment";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Navbar from "react-bootstrap/Navbar";
 import Badge from "react-bootstrap/Badge";
-import Card from "react-bootstrap/Card";
+import Dropdown from "react-bootstrap/Dropdown";
+
+import firebase from "../modules/firebase";
+import {useAuthState} from "react-firebase-hooks/auth";
 
 import {GiRainbowStar} from "react-icons/gi";
-import {BsFillCaretUpFill, BsFillCaretDownFill} from "react-icons/bs";
-import {AiFillTags} from "react-icons/ai";
+import {FaBell} from "react-icons/fa";
+import {MdAddCircle} from "react-icons/md";
+import {HiChevronDown} from "react-icons/hi";
 
-import ReactMarkdown from "react-markdown";
+import { ReactComponent as Logo } from "../images/stackpile-logo.svg"; 
+import Create from "./create";
 
-export default function Post(p){
-    const [author, setAuthor] = useState(p.author);
+export default function Navibar(p){
+    const [user] = useAuthState(firebase.auth());
+    const [userInfo, setUserInfo] = useState({});
+    const [showCreate, setShowCreate] = useState(false);
+
+    let defaultFields = {
+        username: "username",
+        pfp_url: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
+        about_self: "",
+        clout: 0,
+        detail: {birthday: null,
+                created_at: new Date(),
+                education: "",
+                gender: "",
+                location: ""},
+        post_count: 0,
+        post: [],
+        following_count: 0,
+        following: [],
+        follower_count: 0,
+        follower: [],
+        uid: "",
+    }
+
+    function userSetUp(){
+        let displayName = user.displayName.split(" ").join("_");
+        firebase.firestore().collection("usernames").doc(displayName)
+        .set({
+            user_ref: firebase.firestore().doc(`users/${user.uid}`)
+        })
+        .then(()=>{
+            console.log("Username successfully registered!");
+        }).catch((error) => {
+            console.log(error, " happened when trying to register user's username!");
+        });
+        defaultFields.username = displayName;
+        defaultFields.uid = user.uid;
+        firebase.firestore().collection("users").doc(user.uid)
+        .set(defaultFields)
+        .then(() => {
+            console.log("User account setup successfully completed!");
+        }).catch((error) => {
+            console.log(error, " happened when a user is trying to register!");
+        });
+        firebase.auth().currentUser.updateProfile({
+            displayName: displayName
+        }).then(()=>{
+            console.log("DisplayName successfully changed!");
+        }).catch((error)=>{
+            console.log(error, " happened when trying to change user's display name!")
+        });
+    }
 
     useEffect(()=>{
-        if (Object.keys(p.author).length == 0 && p.info){
-            p.info.author.get()
-            .then((doc) => {
+        console.log(user);
+        if (user){
+            firebase.firestore().collection("users").doc(user.uid).get()
+            .then((doc)=>{
                 if (doc.exists){
-                    setAuthor(doc.data());
+                    setUserInfo(doc.data());
                 }else{
-                    console.log("The fetched post doc data does not exist!");
+                    userSetUp();
+                    setUserInfo(defaultFields);
                 }
             }).catch((error)=>{
-                console.log(error, " happened when trying to fetch a post's author!");
+                console.log(error, " occured when trying to get user account data!")
             });
         }
-    },[p.info, p.author]);
+    },[user]);
+
+    function SignIn(){
+        const signInWithGoogle = () => {
+          const provider = new firebase.firebase.auth.GoogleAuthProvider();
+          firebase.auth().signInWithPopup(provider);
+        }
+      
+        return !firebase.auth().currentUser && (
+            <button onClick={signInWithGoogle} className="btn btn-primary">Sign In</button>
+        )
+    }
+
+    const UserInfoToggle = React.forwardRef(({ children, onClick }, ref) => (
+        <div
+          ref={ref}
+          onClick={(e) => {
+            e.preventDefault();
+            onClick(e);
+          }}
+          style={{cursor: "pointer"}}
+        >
+          {children}
+        </div>
+    ));
+      
+    const handleShowCreate = () => setShowCreate(true);
+    const handleHideCreate = () => setShowCreate(false);
 
     return (
-        <>
-        {author &&
-        <Card className="shadow mt-3 flex-row">
-            <Card.Header className="border-0 px-1 d-flex flex-column align-items-center">
-                <BsFillCaretUpFill size={"1.4em"} style={{color:"DimGray", cursor:"pointer"}}/>
-                    <h6 className="m-0">{p.info.upvote-p.info.downvote}</h6>
-                <BsFillCaretDownFill size={"1.4em"} style={{color:"DimGray", cursor:"pointer"}}/>
-            </Card.Header>
-            <div className="flex-row ml-2 my-2">
-                <Link to={`/user/${author.username}`}>
-                    <img className="rounded-circle" src={author.pfp_url} alt="" style={{width:"2.5em", height:"2.5em"}} />
-                </Link>
-            </div>
-            <Col>
-                <Row className="justify-content-between px-2 pt-2 pb-1">
-                    <Row className="align-items-center ml-0">
-                        <Link to={`/user/${author.username}`}>
-                            <Badge variant="primary" className="px-2 py-1">{author.username}</Badge>
+        <Navbar bg="light" sticky="top" className="d-flex justify-content-center p-0">
+            <div className="d-flex justify-content-between align-items-center" style={{width:"95%"}}>
+                <div className="d-flex flex-row align-items-center">
+                    <Navbar.Brand>
+                        <Link to="/">
+                            <Logo style={{width:"2em", height:"2em"}} />
+                            {/* <SiReddit size={"2em"} style={{color:"#FF5700"}}/> */}
                         </Link>
-                        <Badge pill className="d-flex justify-content-between align-items-center">
-                            <p className="m-0 pr-1"><GiRainbowStar style={{color:"Gray"}}/></p>
-                            <p className="m-0">{author.clout}</p>
-                        </Badge>
-                    </Row>
-                    <div className="text-muted my-1" style={{fontSize:"0.8em"}}>
-                        <Moment date={p.info.created_at.toDate()} fromNow/>
+                    </Navbar.Brand>
+                    {/* <div className="rounded flex-fill p-2 m-1" style={{backgroundColor:"white"}}>
+                        <p className="block-quote m-0">{"Search placeholder"}</p>
+                    </div> */}
+                </div>
+                <SignIn />
+                {firebase.auth().currentUser &&
+                <div className="d-flex flex-row-reverse align-items-center">
+                    {userInfo &&
+                    <Dropdown>
+                        <Dropdown.Toggle as={UserInfoToggle}>
+                            <div className="d-flex flex-row-reverse rounded align-items-center px-1 m-1" style={{backgroundColor:"white"}}>
+                                <HiChevronDown style={{color:"Gray"}} />
+                                <div className="pr-1">
+                                    <img className="rounded-circle" src={userInfo.pfp_url} alt="" style={{width:"2.5em",height:"2.5em"}} />
+                                </div>
+                                <Col className="px-2">
+                                    <Badge variant="primary" className="m-0 mb-1 px-2 py-1">{userInfo.username}</Badge>
+                                    <Badge pill className="d-flex justify-content-between align-items-center">
+                                        <p className="m-0"><GiRainbowStar style={{color:"Gray"}}/></p>
+                                        <p className="m-0">{10}</p>
+                                    </Badge>
+                                </Col>
+                            </div>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item as={Link} to={`/user/${userInfo.username}`}>
+                                Profile
+                            </Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item className="text-danger" onClick={() => {firebase.auth().signOut(); window.location.reload();}}>
+                                Sign Out
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown> 
+                    }
+                    <div className="rounded-circle p-2 m-1" style={{backgroundColor:"white", cursor:"pointer"}}>
+                        <FaBell size={"1.8em"} style={{color:"dimGray"}}/>
                     </div>
-                </Row>
-                <Row className="pb-2">
-                    <Col className="pl-2">
-                        <ReactMarkdown>
-                            {p.info.message}
-                        </ReactMarkdown>
-                        {/* {p.info.source.length && 
-                            <Card.Text className="mb-0">
-                                <AiOutlineLink />{" "}
-                                {(()=>{
-                                    let badges = [];
-                                    for (let link in p.info.source){
-                                        badges.push(<Badge pill variant="info" key={uuid()}>{(new URL(p.info.source[link])).hostname}</Badge>);
-                                        badges.push(" ");
-                                    }
-                                    return (<>{badges}</>);
-                                })()}
-                            </Card.Text>
-                        } */}
-                        <Card.Text>
-                            <AiFillTags />{" "}
-                            {(()=>{
-                                let badges = [];
-                                for (let tag in p.info.tag){
-                                    badges.push(<Badge pill className="mr-1" variant="info" key={uuid()}>{p.info.tag[tag]["topic"]}</Badge>);
-                                }
-                                return (<>{badges}</>);
-                            })()}
-                        </Card.Text>
-                    </Col>
-                </Row>
-            
-            </Col>
-            
-        </Card>
-        
-        }
-        </>
-    );
+                    <div className="rounded-circle p-2 m-1" onClick={handleShowCreate} style={{backgroundColor:"white", cursor:"pointer"}}>
+                        <MdAddCircle size={"2em"} style={{color:"dimGray"}}/>
+                    </div>
+                    <Create show={showCreate} handleShow={handleShowCreate} handleHide={handleHideCreate} author={userInfo} />
+                </div>
+                }   
+            </div>
+        </Navbar>
+    )
 }
