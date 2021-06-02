@@ -11,10 +11,14 @@ import {GiRainbowStar} from "react-icons/gi";
 import {BsFillCaretUpFill, BsFillCaretDownFill} from "react-icons/bs";
 import {AiFillTags} from "react-icons/ai";
 
+import firebase from "../modules/firebase";
+import {useAuthState} from "react-firebase-hooks/auth";
+
 import ReactMarkdown from "react-markdown";
 
 export default function Post(p){
     const [author, setAuthor] = useState(p.author);
+    const [user] = useAuthState(firebase.auth());
 
     useEffect(()=>{
         if (Object.keys(p.author).length == 0 && p.info){
@@ -31,14 +35,70 @@ export default function Post(p){
         }
     },[p.info, p.author]);
 
+    function upvote() {
+      if (p.user == undefined) {
+        //sorry, i'm used to vanilla js
+        const provider = new firebase.firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider);
+      } else {
+        const postRef = p.info.uid.replace(" ", "");
+        if (firebase.firestore().collection("posts").doc(postRef) in p.user.upvoted_post) {
+          firebase.firestore().collection("posts").doc(postRef).update({
+          upvote: p.info.upvote - 1})
+          firebase.firestore().collection("users").doc(p.info.author).update({clout: p.info.clout + 1});
+          const upposts = []
+          for (let post in p.user.upvoted_post) {
+            if (post != postRef) {
+              upposts.append(post);
+            }
+          }
+          firebase.firestore().collection("users").doc(p.user).update({upvoted_post: upposts});
+        } else {
+          firebase.firestore().collection("posts").doc(postRef).update({
+          upvote: p.info.upvote + 1})
+          firebase.firestore().collection("users").doc(p.info.author).update({clout: p.info.clout + 1});
+          firebase.firestore().collection("users").doc(p.user).update({upvoted_post: [...p.user.upvoted_post, firebase.firestore().collection("posts").doc(postRef)]})
+        }
+      }
+    }
+
+    function downvote() {
+      if (p.user == undefined) {
+        //sorry, i'm used to vanilla js
+        const provider = new firebase.firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider);
+      } else {
+        const postRef = p.info.uid.replace(" ", "");
+        if (firebase.firestore().collection("posts").doc(postRef) in p.user.downvoted_post) {
+          firebase.firestore().collection("posts").doc(postRef).update({
+          upvote: p.info.downvote - 1})
+          firebase.firestore().collection("users").doc(p.info.author).update({clout: p.info.clout + 1});
+          const downposts = []
+          for (let post in p.user.downvoted_post) {
+            if (post != postRef) {
+              downposts.append(post);
+            }
+          }
+          firebase.firestore().collection("users").doc(p.user).update({upvoted_post: downposts});
+        } else {
+          firebase.firestore().collection("posts").doc(postRef).update({upvote: p.info.downvote + 1})
+          firebase.firestore().collection("users").doc(p.info.author).update({clout: p.info.clout - 1});
+          firebase.firestore().collection("users").doc(p.user).update({downvoted_post: [...p.user.downvoted_post, firebase.firestore().collection("posts").doc(postRef)]})
+        }
+      }
+    }
+
+    const upvoteColor = "DimGray";
+    const downvoteColor = "DimGray";
+
     return (
         <>
         {author &&
         <Card className="shadow mt-3 flex-row">
             <Card.Header className="border-0 px-1 d-flex flex-column align-items-center">
-                <BsFillCaretUpFill size={"1.4em"} style={{color:"DimGray", cursor:"pointer"}}/>
+                <BsFillCaretUpFill size={"1.4em"} style={{color: "DimGray", cursor:"pointer"}} onClick={upvote}/>
                     <h6 className="m-0">{p.info.upvote-p.info.downvote}</h6>
-                <BsFillCaretDownFill size={"1.4em"} style={{color:"DimGray", cursor:"pointer"}}/>
+                <BsFillCaretDownFill size={"1.4em"} style={{color: "DimGray", cursor:"pointer"}} onClick={downvote}/>
             </Card.Header>
             <div className="flex-row ml-2 my-2">
                 <Link to={`/user/${author.username}`}>
