@@ -79,7 +79,6 @@ export default function Create(p){
             },{merge: true})
             .then(()=>{
                 firebase.firestore().collection("users").doc(p.author.uid).set({
-                    post_count: p.author.post_count+1,
                     post: [...p.author.post, firebase.firestore().collection("posts").doc(postRef)]
                 },{merge: true})
                 .then(() => {

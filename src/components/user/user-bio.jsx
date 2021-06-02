@@ -149,13 +149,13 @@ export default function UserBio(p){
                             <p className="m-0">
                                 <BsPersonLinesFill style={{color:"Gray"}}/> Following
                             </p>
-                            <Badge pill variant="info">{p.author.following_count}</Badge>
+                            <Badge pill variant="info">{p.author.following.length}</Badge>
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <BsPeopleFill style={{color:"Gray"}}/> Followers
                             </p>
-                            <Badge pill variant="info">{p.author.follower_count}</Badge>
+                            <Badge pill variant="info">{p.author.follower.length}</Badge>
                         </div>
                     </Col>
                 </Row>
@@ -207,13 +207,13 @@ export default function UserBio(p){
                             <p className="m-0">
                                 <BsPersonLinesFill style={{color:"Gray"}}/> Following
                             </p>
-                            <Badge pill variant="info">{p.author.following_count}</Badge>
+                            <Badge pill variant="info">{p.author.following.length}</Badge>
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <p className="m-0">
                                 <BsPeopleFill style={{color:"Gray"}}/> Followers
                             </p>
-                            <Badge pill variant="info">{p.author.follower_count}</Badge>
+                            <Badge pill variant="info">{p.author.follower.length}</Badge>
                         </div>
                     </Col>
                 </Row>

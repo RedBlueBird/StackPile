@@ -31,12 +31,11 @@ export default function Navibar(p){
                 education: "",
                 gender: "",
                 location: ""},
-        post_count: 0,
         post: [],
-        following_count: 0,
         following: [],
-        follower_count: 0,
         follower: [],
+        upvoted_post: [],
+        downvoted_post: [],
         uid: "",
     }
 

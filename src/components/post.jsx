@@ -7,6 +7,8 @@ import Col from "react-bootstrap/Col";
 import Badge from "react-bootstrap/Badge";
 import Card from "react-bootstrap/Card";
 
+import firebase from "../modules/firebase";
+
 import {GiRainbowStar} from "react-icons/gi";
 import {BsFillCaretUpFill, BsFillCaretDownFill} from "react-icons/bs";
 import {AiFillTags} from "react-icons/ai";
@@ -15,6 +17,9 @@ import ReactMarkdown from "react-markdown";
 
 export default function Post(p){
     const [author, setAuthor] = useState(p.author);
+    const [vote, setVote] = useState(0);
+    const [upvotes, setUpvotes] = useState(0);
+    const [downvotes, setDownvotes] = useState(0);
 
     useEffect(()=>{
         if (Object.keys(p.author).length == 0 && p.info){
@@ -31,23 +36,143 @@ export default function Post(p){
         }
     },[p.info]);
 
+    let isUpvoted = (index=false) => {
+        let ref = firebase.firestore().collection("posts").doc(p.info.uid);
+        for (let i = 0; i < p.user.upvoted_post.length; i++){
+            if (ref.isEqual(p.user.upvoted_post[i])){
+                if (index){
+                    return i;
+                }
+                return true;
+            }
+        }
+        if (index){
+            return -1;
+        }
+        return false;
+    }
+
+    let isDownvoted = (index=false) => {
+        let ref = firebase.firestore().collection("posts").doc(p.info.uid);
+        for (let i = 0; i < p.user.downvoted_post.length; i++){
+            if (ref.isEqual(p.user.downvoted_post[i])){
+                if (index){
+                    return i;
+                }
+                return true;
+            }
+        }
+        if (index){
+            return -1;
+        }
+        return false;
+    }
+
+    useEffect(()=>{
+        if (p.user.upvoted_post && p.user.downvoted_post){
+            if (isUpvoted()){
+                setVote(1);
+                setUpvotes(1);
+            }else if (isDownvoted()){
+                setVote(-1);
+                setDownvotes(1);
+            }else{
+                setVote(0);
+            }
+        }
+    }, [p.user.upvoted_post, p.user.downvoted_post]);
+
+    let upvote = () => {
+        if (vote === 1) return;
+        setVote(1);
+        let ref = firebase.firestore().collection("posts").doc(p.info.uid);
+        let newUpvoted = p.user.upvoted_post;
+        let newDownvoted = p.user.downvoted_post;
+        if (!isUpvoted()){
+            newUpvoted.push(ref);
+        }
+        let index = isDownvoted(true);
+        if (index != -1){
+            newDownvoted.splice(index, 1);
+        }
+        firebase.firestore().collection("users").doc(p.user.uid).set({
+            upvoted_post: newUpvoted,
+            downvoted_post: newDownvoted,
+        }, {merge: true})
+        .then(()=>{
+            console.log("Upvoted a post successfully!");
+        }).catch((error) =>{
+            console.log(error, " happened, when trying to upvote a post!");
+        });
+        firebase.firestore().collection("posts").doc(p.info.uid).set({
+            upvote: p.info.upvote + (upvotes == 0 ? 1 : 0),
+            downvote: p.info.downvote + (downvotes == 0 ? 0 : -1),
+        },{merge:true})
+        .then(()=>{
+            console.log("Upvote updated!");
+        }).catch((error)=>{
+            console.log(error, " happeend, when trying to upvote update!");
+        })
+    }
+
+    let downvote = (postid) => {
+        if (vote === -1) return;
+        setVote(-1);
+        let ref = firebase.firestore().collection("posts").doc(p.info.uid);
+        let newUpvoted = p.user.upvoted_post;
+        let newDownvoted = p.user.downvoted_post;
+        if (!isDownvoted()){
+            newDownvoted.push(ref);
+        }
+        let index = isUpvoted(true);
+        if (index != -1){
+            newUpvoted.splice(index, 1);
+        }
+        firebase.firestore().collection("users").doc(p.user.uid).set({
+            upvoted_post: newUpvoted,
+            downvoted_post: newDownvoted,
+        }, {merge: true})
+        .then(()=>{
+            console.log("Downvoted a post successfully!");
+        }).catch((error) =>{
+            console.log(error, " happened, when trying to downvote a post!");
+        });
+        firebase.firestore().collection("posts").doc(p.info.uid).set({
+            upvote: p.info.upvote + (upvotes == 0 ? 0 : -1),
+            downvote: p.info.downvote + (downvotes == 0 ? 1 : 0),
+        },{merge:true})
+        .then(()=>{
+            console.log("Downvote updated!");
+        }).catch((error)=>{
+            console.log(error, " happeend, when trying to downvote update!");
+        })
+    }
+
     return (
         <>
-        {author && 
+        {author && p.user.upvoted_post && p.user.downvoted_post && 
         <Card className="shadow mt-3 flex-row">
             <Card.Header className="border-0 px-1 d-flex flex-column align-items-center">
                 <BsFillCaretUpFill
                     size={"1.4em"}
-                    style={{color: p.isUpvoted() ? "DeepSkyBlue" : "DimGray",
+                    style={{color: vote === 1 ? "DeepSkyBlue" : "DimGray",
                             cursor:"pointer"}}
-                    onClick={p.upvote}
+                    onClick={upvote}
                 />
-                    <h6 className="m-0">{p.info.upvote-p.info.downvote}</h6>
+                    <h6 className="m-0">{(()=>{
+                        let base = p.info.upvote-p.info.downvote;
+                        if (vote === 1){
+                            base += vote-upvotes+downvotes;
+                        }else if (vote === -1){
+                            base += vote+downvotes-upvotes;
+                        }
+                        return base;
+                    })()}</h6>
                 <BsFillCaretDownFill
                     size={"1.4em"}
-                    style={{color: p.isDownvoted() ? "DeepSkyBlue" : "DimGray",
+                    style={{color: vote === -1 ? "DeepSkyBlue" : "DimGray",
                             cursor:"pointer"}}
-                    onClick={p.downvote}
+                    onClick={downvote}
                 />
             </Card.Header>
             <div className="flex-row ml-2 my-2">
@@ -106,6 +231,7 @@ export default function Post(p){
         </Card>
         
         }
+        <div></div>
         </>
     );
 }
