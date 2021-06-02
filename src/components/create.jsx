@@ -74,8 +74,8 @@ export default function Create(p){
             postRef = docRef.id;
             p.handleHide();
 
-            firebase.firestore().collection("posts").doc(p.postRef).set({
-                uid: docRef
+            firebase.firestore().collection("posts").doc(postRef).set({
+                uid: postRef
             },{merge: true})
             .then(()=>{
                 firebase.firestore().collection("users").doc(p.author.uid).set({

@@ -14,30 +14,49 @@ import UserPost from "../components/user/user-post";
 
 export default function User(){
     const {userid} = useParams();
-    const [userRef] = useDocumentDataOnce(firebase.firestore().collection("usernames").doc(userid));
+    const [authorRef] = useDocumentDataOnce(firebase.firestore().collection("usernames").doc(userid));
+    const [author, setAuthor] = useState();
     const [user, setUser] = useState();
     const [dates, setDates] = useState([]);
 
     useEffect(()=>{
-        if (userRef){
-            userRef.user_ref.get()
+        if (authorRef){
+            authorRef.user_ref.get()
             .then((doc)=>{
                 if (doc.exists){
-                    setUser(doc.data());
+                    setAuthor(doc.data());
                 }else{
                     console.log("No user exists");
                 }
             }).catch((error)=>{
-                console.log(error, " occurred when tyring to load a user profile page");
+                console.log(error, " occurred when trying to load a user profile page");
             });
         }
-    },[userRef]);
+    },[authorRef]);
+
+    useEffect(()=>{
+        if (firebase.auth().currentUser && author){
+            if (firebase.auth().currentUser.uid === author.uid){
+                setUser(author);
+            }
+            firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get()
+            .then((doc)=>{
+                if (doc.exists){
+                    setUser(doc.data());
+                }else{
+                    console.log("User is not signed in!");
+                }
+            }).catch((error)=>{
+                console.log(error, " occurred when trying to get current user's doc data!");
+            });
+        }
+    }, [author, firebase.auth().currentUser])
 
     useEffect(() => {
         (async () => {
             let collect;
-            if (user){
-                collect = await Promise.all(user.post.map(ref => {
+            if (author){
+                collect = await Promise.all(author.post.map(ref => {
                     let res = ref.get()
                     .then((doc) => {
                         if (doc.exists){
@@ -58,27 +77,23 @@ export default function User(){
             }
             setDates(collect);
         })();
-    },[user]);
+    },[author]);
 
     return (
         <>
-        {(()=>{
-            if (user){
-                return (
-                    <Row className="justify-content-center">
-                        <Col sm={8} lg={4}>
-                            <UserBio author={user} />
-                            <UserDetail info={user.detail} uid={user.uid} />
-                            <UserStat />
-                        </Col>
-                        <Col sm={12} lg={7}>
-                            <UserCalendar info={dates}/>
-                            {/* <UserPost info={dates} author={user} /> */}
-                        </Col>
-                    </Row>
-                );
-            }
-        })()}
+        {author && user &&
+            <Row className="justify-content-center">
+                <Col sm={8} lg={4}>
+                    <UserBio author={author} />
+                    <UserDetail info={author.detail} uid={author.uid} />
+                    <UserStat />
+                </Col>
+                <Col sm={12} lg={7}>
+                    <UserCalendar info={dates}/>
+                    <UserPost info={dates} author={author} user={user} />
+                </Col>
+            </Row>
+        }
         </>
     );
 }

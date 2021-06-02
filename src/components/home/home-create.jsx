@@ -39,7 +39,7 @@ export default function HomeCreate(p){
 
     return (
       <>
-      {p.author && 
+      {Object.keys(p.author).length != 0 && 
       <>
         <Card className="shadow my-2">
             <Card.Body className="p-3">

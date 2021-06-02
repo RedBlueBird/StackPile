@@ -25,7 +25,13 @@ export default function UserPost(p){
                 let limit = 10;
                 let count = 0;
                 for (let post in p.info){
-                    fields.push(<Post info={p.info[post]} author={p.author} user={p.author} key={uuid()} />);
+                    fields.push(
+                    <Post
+                        info={p.info[post]} 
+                        author={p.author} 
+                        user={{}} 
+                        key={uuid()} 
+                    />);
                     count++;
                     if (count === limit){
                         break;

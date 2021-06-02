@@ -22,7 +22,7 @@ export default function Post(p){
     const [downvotes, setDownvotes] = useState(0);
 
     useEffect(()=>{
-        if (Object.keys(p.author).length == 0 && p.info){
+        if (Object.keys(p.author).length === 0 && p.info){
             p.info.author.get()
             .then((doc) => {
                 if (doc.exists){
@@ -37,6 +37,7 @@ export default function Post(p){
     },[p.info]);
 
     let isUpvoted = (index=false) => {
+        if (Object.keys(p.user).length === 0) return;
         let ref = firebase.firestore().collection("posts").doc(p.info.uid);
         for (let i = 0; i < p.user.upvoted_post.length; i++){
             if (ref.isEqual(p.user.upvoted_post[i])){
@@ -53,6 +54,7 @@ export default function Post(p){
     }
 
     let isDownvoted = (index=false) => {
+        if (Object.keys(p.user).length === 0) return;
         let ref = firebase.firestore().collection("posts").doc(p.info.uid);
         for (let i = 0; i < p.user.downvoted_post.length; i++){
             if (ref.isEqual(p.user.downvoted_post[i])){
@@ -69,6 +71,7 @@ export default function Post(p){
     }
 
     useEffect(()=>{
+        if (Object.keys(p.user).length === 0) return;
         if (p.user.upvoted_post && p.user.downvoted_post){
             if (isUpvoted()){
                 setVote(1);
@@ -83,7 +86,9 @@ export default function Post(p){
     }, [p.user.upvoted_post, p.user.downvoted_post]);
 
     let upvote = () => {
+        if (Object.keys(p.user).length === 0) return;
         if (vote === 1) return;
+        if (author.uid === p.user.uid) return;
         setVote(1);
         let ref = firebase.firestore().collection("posts").doc(p.info.uid);
         let newUpvoted = p.user.upvoted_post;
@@ -104,19 +109,29 @@ export default function Post(p){
         }).catch((error) =>{
             console.log(error, " happened, when trying to upvote a post!");
         });
-        firebase.firestore().collection("posts").doc(p.info.uid).set({
-            upvote: p.info.upvote + (upvotes == 0 ? 1 : 0),
-            downvote: p.info.downvote + (downvotes == 0 ? 0 : -1),
+        firebase.firestore().collection("posts").doc(p.info.uid).update({
+            upvote: firebase.firestore.FieldValue.increment(upvotes === 0 ? 1 : 0),
+            downvote: firebase.firestore.FieldValue.increment(downvotes === 0 ? 0 : -1),
         },{merge:true})
         .then(()=>{
             console.log("Upvote updated!");
         }).catch((error)=>{
             console.log(error, " happeend, when trying to upvote update!");
-        })
+        });
+        firebase.firestore().collection("users").doc(author.uid).update({
+            clout: firebase.firestore.FieldValue.increment((upvotes === 0 ? 1 : 0) - (downvotes === 0 ? 0 : -1))
+        },{merge:true})
+        .then(()=>{
+            console.log("Clout increased!");
+        }).catch((error)=>{
+            console.log(error, " happened, failed to increase clout!");
+        });
     }
 
     let downvote = (postid) => {
+        if (Object.keys(p.user).length === 0) return;
         if (vote === -1) return;
+        if (author.uid === p.user.uid) return;
         setVote(-1);
         let ref = firebase.firestore().collection("posts").doc(p.info.uid);
         let newUpvoted = p.user.upvoted_post;
@@ -137,20 +152,32 @@ export default function Post(p){
         }).catch((error) =>{
             console.log(error, " happened, when trying to downvote a post!");
         });
-        firebase.firestore().collection("posts").doc(p.info.uid).set({
-            upvote: p.info.upvote + (upvotes == 0 ? 0 : -1),
-            downvote: p.info.downvote + (downvotes == 0 ? 1 : 0),
+        firebase.firestore().collection("posts").doc(p.info.uid).update({
+            upvote: firebase.firestore.FieldValue.increment(upvotes === 0 ? 0 : -1),
+            downvote: firebase.firestore.FieldValue.increment(downvotes === 0 ? 1 : 0),
         },{merge:true})
         .then(()=>{
             console.log("Downvote updated!");
         }).catch((error)=>{
             console.log(error, " happeend, when trying to downvote update!");
-        })
+        });
+        firebase.firestore().collection("users").doc(author.uid).update({
+            clout: firebase.firestore.FieldValue.increment((upvotes === 0 ? 0 : -1) - (downvotes === 0 ? 1 : 0))
+        },{merge:true})
+        .then(()=>{
+            console.log("Clout decreased!");
+        }).catch((error)=>{
+            console.log(error, " happened, failed to decrease clout!");
+        });
     }
+
+    useEffect(()=>{
+        setVote(0);
+    },[]);
 
     return (
         <>
-        {author && p.user.upvoted_post && p.user.downvoted_post && 
+        {author && 
         <Card className="shadow mt-3 flex-row">
             <Card.Header className="border-0 px-1 d-flex flex-column align-items-center">
                 <BsFillCaretUpFill
@@ -197,7 +224,7 @@ export default function Post(p){
                 </Row>
                 <Row className="pb-2">
                     <Col className="pl-2">
-                        <ReactMarkdown>
+                        <ReactMarkdown components={{img: props => <img src={props.src} alt="" style={{width:"100%"}} /> }}>
                             {p.info.message}
                         </ReactMarkdown>
                         {/* {p.info.source.length && 

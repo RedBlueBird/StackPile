@@ -141,7 +141,7 @@ export default function Navibar(p){
                                     <Badge variant="primary" className="m-0 mb-1 px-2 py-1">{userInfo.username}</Badge>
                                     <Badge pill className="d-flex justify-content-between align-items-center">
                                         <p className="m-0"><GiRainbowStar style={{color:"Gray"}}/></p>
-                                        <p className="m-0">{10}</p>
+                                        <p className="m-0">{userInfo.clout}</p>
                                     </Badge>
                                 </Col>
                             </div>
