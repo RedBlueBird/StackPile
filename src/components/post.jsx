@@ -171,9 +171,7 @@ export default function Post(p){
         });
     }
 
-    useEffect(()=>{
-        setVote(0);
-    },[]);
+  
 
     return (
         <>

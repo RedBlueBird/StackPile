@@ -86,7 +86,7 @@ export default function User(){
                 <Col sm={8} lg={4}>
                     <UserBio author={author} />
                     <UserDetail info={author.detail} uid={author.uid} />
-                    <UserStat />
+                    {/* <UserStat /> */}
                 </Col>
                 <Col sm={12} lg={7}>
                     <UserCalendar info={dates}/>
