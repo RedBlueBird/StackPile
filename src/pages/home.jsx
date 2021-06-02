@@ -32,6 +32,8 @@ export default function User(){
         }
     },[firebase.auth().currentUser]);
 
+    
+
     return (
         <>
         {user &&
@@ -41,7 +43,7 @@ export default function User(){
             </Col>
             <Col sm={12} lg={6}>
                 <HomeCreate author={user} />
-                <HomePost posts={posts} />
+                <HomePost posts={posts} user={user} />
             </Col>
             <Col sm={12} lg={3}>
 
