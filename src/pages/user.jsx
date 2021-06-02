@@ -73,7 +73,7 @@ export default function User(){
                         </Col>
                         <Col sm={12} lg={7}>
                             <UserCalendar info={dates}/>
-                            <UserPost info={dates} author={user} />
+                            {/* <UserPost info={dates} author={user} /> */}
                         </Col>
                     </Row>
                 );

@@ -29,16 +29,26 @@ export default function Post(p){
                 console.log(error, " happened when trying to fetch a post's author!");
             });
         }
-    },[p.info, p.author]);
+    },[p.info]);
 
     return (
         <>
-        {author &&
+        {author && 
         <Card className="shadow mt-3 flex-row">
             <Card.Header className="border-0 px-1 d-flex flex-column align-items-center">
-                <BsFillCaretUpFill size={"1.4em"} style={{color:"DimGray", cursor:"pointer"}}/>
+                <BsFillCaretUpFill
+                    size={"1.4em"}
+                    style={{color: p.isUpvoted() ? "DeepSkyBlue" : "DimGray",
+                            cursor:"pointer"}}
+                    onClick={p.upvote}
+                />
                     <h6 className="m-0">{p.info.upvote-p.info.downvote}</h6>
-                <BsFillCaretDownFill size={"1.4em"} style={{color:"DimGray", cursor:"pointer"}}/>
+                <BsFillCaretDownFill
+                    size={"1.4em"}
+                    style={{color: p.isDownvoted() ? "DeepSkyBlue" : "DimGray",
+                            cursor:"pointer"}}
+                    onClick={p.downvote}
+                />
             </Card.Header>
             <div className="flex-row ml-2 my-2">
                 <Link to={`/user/${author.username}`}>

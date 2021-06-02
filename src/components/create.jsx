@@ -74,17 +74,21 @@ export default function Create(p){
             postRef = docRef.id;
             p.handleHide();
 
-            firebase.firestore().collection("users").doc(p.author.uid).set({
-                post_count: p.author.post_count+1,
-                post: [...p.author.post, firebase.firestore().collection("posts").doc(postRef)]
+            firebase.firestore().collection("posts").doc(p.postRef).set({
+                uid: docRef
             },{merge: true})
-            .then(() => {
-                window.location.href = "/home";
+            .then(()=>{
+                firebase.firestore().collection("users").doc(p.author.uid).set({
+                    post_count: p.author.post_count+1,
+                    post: [...p.author.post, firebase.firestore().collection("posts").doc(postRef)]
+                },{merge: true})
+                .then(() => {
+                    window.location.href = "/home";
+                })
+                .catch((error)=>{
+                    console.log(error, " happened when trying to edit User Detail!");
+                });
             })
-            .catch((error)=>{
-                console.log(error, " happened when trying to edit User Detail!");
-            });
-
         }).catch((error) => {
             console.log(error, " happened when a post is trying to be shared!");
         });

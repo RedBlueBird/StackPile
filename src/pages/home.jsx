@@ -41,7 +41,7 @@ export default function User(){
             </Col>
             <Col sm={12} lg={6}>
                 <HomeCreate author={user} />
-                <HomePost posts={posts} />
+                <HomePost posts={posts} author={user} />
             </Col>
             <Col sm={12} lg={3}>
 
