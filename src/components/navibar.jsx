@@ -157,9 +157,18 @@ export default function Navibar(p){
                         </Dropdown.Menu>
                     </Dropdown> 
                     }
-                    <div className="rounded-circle p-2 m-1" style={{backgroundColor:"white", cursor:"pointer"}}>
-                        <FaBell size={"1.8em"} style={{color:"dimGray"}}/>
-                    </div>
+                    <Dropdown>
+                        <Dropdown.Toggle as={UserInfoToggle}>
+                            <div className="rounded-circle p-2 m-1" style={{backgroundColor:"white", cursor:"pointer"}}>
+                                <FaBell size={"1.8em"} style={{color:"dimGray"}}/>
+                            </div>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item>
+                                Empty!
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                     <div className="rounded-circle p-2 m-1" onClick={handleShowCreate} style={{backgroundColor:"white", cursor:"pointer"}}>
                         <MdAddCircle size={"2em"} style={{color:"dimGray"}}/>
                     </div>
