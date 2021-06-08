@@ -17,6 +17,10 @@ export default function App(){
           <Route exact path="/">
             <Redirect to="/home" />
           </ Route>
+          <Route exact path='/timeweb' component={() => { 
+              window.location.href = 'https://timeweb.io'; 
+              return null;
+          }}/>
           <Route exact path="/home" component={Home} />
           <Route exact path="/user/:userid" component={User} />
         </Switch>
